@@ -8,7 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Initial release preparation
+- Claude Code Skill 插件支持
+  - 在 Claude Code 中直接查询 AI 资讯
+  - 支持相对日期查询（昨天、前天、今天）
+  - 支持绝对日期查询（YYYY-MM-DD）
+  - 内置 Claude AI 智能摘要和分类
+  - 可选生成精美网页（苹果风/深海蓝/秋日暖阳主题）
+  - 友好的用户无数据提示
+
+### Changed
+- 邮件通知改为可选配置
+- 修复空环境变量导致 SMTP_PORT 转换失败的问题
+- 修复邮件未配置时 total_items 未定义的错误
+
+[Unreleased]: https://github.com/geekjourneyx/ai-daily-skill/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/geekjourneyx/ai-daily-skill/releases/tag/v1.0.0
+
+---
 
 ## [1.0.0] - 2026-01-15
 
