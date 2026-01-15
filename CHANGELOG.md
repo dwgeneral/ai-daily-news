@@ -8,18 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Claude Code Skill 插件支持
-  - 在 Claude Code 中直接查询 AI 资讯
-  - 支持相对日期查询（昨天、前天、今天）
-  - 支持绝对日期查询（YYYY-MM-DD）
-  - 内置 Claude AI 智能摘要和分类
-  - 可选生成精美网页（苹果风/深海蓝/秋日暖阳主题）
-  - 友好的用户无数据提示
+- **图片生成功能**
+  - 集成 Firefly Card API，支持生成分享卡片图片
+  - 3:4 比例 (400x533)，适合社交媒体分享
+  - 纯黑太阳主题 (tempBlackSun)，思源宋体字体
+  - 自动保存到 `docs/images/{日期}.png`
+  - 支持通过环境变量 `ENABLE_IMAGE_GENERATION` 开关控制
 
 ### Changed
-- 邮件通知改为可选配置
-- 修复空环境变量导致 SMTP_PORT 转换失败的问题
-- 修复邮件未配置时 total_items 未定义的错误
+- GitHub Actions 工作流新增 Firefly API 环境变量配置
+- Skill 定义新增 Step 7 图片生成流程
+- README 新增图片生成功能说明和配置文档
+
+### Fixed
+- 修复 SKILL.md 中 API 返回格式描述不准确的问题
+- 修复 image_generator.py 中未定义变量的 bug
 
 [Unreleased]: https://github.com/geekjourneyx/ai-daily-skill/compare/v1.0.0...HEAD
 [1.0.0]: https://github.com/geekjourneyx/ai-daily-skill/releases/tag/v1.0.0
@@ -44,6 +47,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 资讯智能分类（模型发布、产品动态、研究论文、工具框架、融资并购、行业事件）
 - 索引页面，按日期倒序展示所有日报
 - 关键词提取和标签展示
+- Claude Code Skill 插件支持
+  - 在 Claude Code 中直接查询 AI 资讯
+  - 支持相对日期查询（昨天、前天、今天）
+  - 支持绝对日期查询（YYYY-MM-DD）
+  - 内置 Claude AI 智能摘要和分类
+  - 可选生成精美网页（苹果风/深海蓝/秋日暖阳主题）
+  - 友好的用户无数据提示
 
 ### Configuration
 - 支持 8 种主题配色：柔和蓝色、深靛蓝、优雅紫色、清新绿色、温暖橙色、玫瑰粉色、冷色青绿、中性灰色
@@ -54,6 +64,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 完整的 README.md 使用文档
 - 常见问题（FAQ）章节
 - 本地开发指南
-
-[Unreleased]: https://github.com/geekjourneyx/ai-daily-skill/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/geekjourneyx/ai-daily-skill/releases/tag/v1.0.0
