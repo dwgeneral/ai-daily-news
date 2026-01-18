@@ -73,13 +73,7 @@ def main():
         total_steps += 1
 
     try:
-        # 1. 计算目标日期 (今天 - 1天，即昨天)
-        target_date = get_target_date(days_offset=1)
-        print(f"[目标日期] {target_date}")
-        print(f"   (北京时间: {datetime.now(timezone.utc) + timedelta(hours=8)} + 8h)")
-        print()
-
-        # 2. 下载并解析 RSS
+        # 1. 下载并解析 RSS
         print(f"[步骤 1/{total_steps}] 下载 RSS...")
         fetcher = RSSFetcher()
         rss_data = fetcher.fetch()
@@ -90,8 +84,13 @@ def main():
             print(f"   RSS 日期范围: {date_range[0]} ~ {date_range[1]}")
         print()
 
-        # 3. 查找目标日期的内容
-        print(f"[步骤 2/{total_steps}] 查找目标日期的资讯...")
+        # 2. 获取最新的资讯（自动获取 RSS 中最新的一条）
+        print(f"[步骤 2/{total_steps}] 获取最新资讯...")
+        target_date = fetcher.get_latest_date(rss_data)
+        if not target_date:
+            print("   ❌ RSS 中没有找到任何资讯")
+            return
+        print(f"   最新资讯日期: {target_date}")
         content = fetcher.get_content_by_date(target_date, rss_data)
 
         if not content:
