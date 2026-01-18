@@ -84,14 +84,13 @@ def main():
             print(f"   RSS 日期范围: {date_range[0]} ~ {date_range[1]}")
         print()
 
-        # 2. 获取最新的资讯（自动获取 RSS 中最新的一条）
-        print(f"[步骤 2/{total_steps}] 获取最新资讯...")
-        target_date = fetcher.get_latest_date(rss_data)
-        if not target_date:
-            print("   ❌ RSS 中没有找到任何资讯")
+        # 2. 获取最近48小时的资讯
+        print(f"[步骤 2/{total_steps}] 获取最近48小时资讯...")
+        result = fetcher.get_recent_content(hours=48, feed=rss_data)
+        if not result:
+            print("   ❌ 最近48小时内没有资讯")
             return
-        print(f"   最新资讯日期: {target_date}")
-        content = fetcher.get_content_by_date(target_date, rss_data)
+        content, target_date = result
 
         if not content:
             print("   目标日期无内容，生成空页面")
