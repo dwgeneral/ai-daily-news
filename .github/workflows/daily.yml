@@ -108,6 +108,52 @@ jobs:
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
 
+      - name: 发送飞书通知
+        if: success()
+        env:
+          FEISHU_WEBHOOK_URL: ${{ secrets.FEISHU_WEBHOOK_URL }}
+        run: |
+          TODAY=$(date -u -d '2 days ago' +%Y-%m-%d)
+          PAGES_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+
+          curl -X POST "$FEISHU_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "msg_type": "interactive",
+              "card": {
+                "header": {
+                  "title": {
+                    "tag": "plain_text",
+                    "content": "🤖 AI Daily 资讯日报已更新"
+                  },
+                  "template": "blue"
+                },
+                "elements": [
+                  {
+                    "tag": "div",
+                    "text": {
+                      "tag": "lark_md",
+                      "content": "**日期**: '"$TODAY"'\n**状态**: ✅ 构建成功"
+                    }
+                  },
+                  {
+                    "tag": "action",
+                    "actions": [
+                      {
+                        "tag": "button",
+                        "text": {
+                          "tag": "plain_text",
+                          "content": "查看日报"
+                        },
+                        "type": "primary",
+                        "url": "'"$PAGES_URL"'"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }'
+
       - name: 上传构建产物（用于调试）
         uses: actions/upload-artifact@v4
         if: always()
