@@ -1,14 +1,14 @@
 """
-Claude 分析模块
-使用 Claude API 对资讯内容进行智能分析、分类和摘要
+AI 分析模块
+使用智谱 GLM API 对资讯内容进行智能分析、分类和摘要
 """
 import os
 import json
 from typing import Dict, Any, Optional
-from anthropic import Anthropic
+from openai import OpenAI
 
 from src.config import (
-    ANTHROPIC_BASE_URL,
+    ZHIPU_BASE_URL,
     ZHIPU_API_KEY,
     CLAUDE_MODEL,
     CLAUDE_MAX_TOKENS,
@@ -19,18 +19,18 @@ from src.config import (
 
 
 class ClaudeAnalyzer:
-    """Claude AI 分析器"""
+    """AI 分析器（使用智谱 GLM）"""
 
     def __init__(self, api_key: str = None, base_url: str = None):
         """
-        初始化 Claude 客户端
+        初始化 AI 客户端
 
         Args:
             api_key: API 密钥，默认从环境变量读取
             base_url: API 基础 URL，默认从环境变量读取
         """
         self.api_key = api_key or ZHIPU_API_KEY
-        self.base_url = base_url or ANTHROPIC_BASE_URL
+        self.base_url = base_url or ZHIPU_BASE_URL
         self.model = CLAUDE_MODEL
         self.max_tokens = CLAUDE_MAX_TOKENS
 
@@ -38,15 +38,15 @@ class ClaudeAnalyzer:
             raise ValueError("ZHIPU_API_KEY 环境变量未设置")
 
         try:
-            self.client = Anthropic(
+            self.client = OpenAI(
                 base_url=self.base_url,
                 api_key=self.api_key
             )
-            print(f"✅ Claude 客户端初始化成功")
+            print(f"✅ AI 客户端初始化成功")
             print(f"   Base URL: {self.base_url}")
             print(f"   Model: {self.model}")
         except Exception as e:
-            raise Exception(f"Claude 客户端初始化失败: {e}")
+            raise Exception(f"AI 客户端初始化失败: {e}")
 
     def analyze(self, content: Dict[str, Any], target_date: str) -> Dict[str, Any]:
         """
@@ -68,14 +68,14 @@ class ClaudeAnalyzer:
         if not content or not content.get("content"):
             return self._empty_result(target_date, "内容为空")
 
-        print(f"🤖 正在调用 Claude 分析内容...")
+        print(f"🤖 正在调用 AI 分析内容...")
 
         # 构建提示词
         prompt = self._build_prompt(content, target_date)
 
         try:
-            # 调用 Claude API
-            response = self.client.messages.create(
+            # 调用智谱 GLM API（OpenAI 兼容格式）
+            response = self.client.chat.completions.create(
                 model=self.model,
                 max_tokens=self.max_tokens,
                 temperature=0.3,  # 较低温度保证稳定性
@@ -88,8 +88,8 @@ class ClaudeAnalyzer:
             )
 
             # 解析响应
-            result_text = response.content[0].text
-            print(f"✅ Claude 响应成功，响应长度: {len(result_text)} 字符")
+            result_text = response.choices[0].message.content
+            print(f"✅ AI 响应成功，响应长度: {len(result_text)} 字符")
 
             # 解析 JSON 结果
             result = self._parse_result(result_text, target_date)
@@ -97,7 +97,7 @@ class ClaudeAnalyzer:
             return result
 
         except Exception as e:
-            print(f"❌ Claude API 调用失败: {e}")
+            print(f"❌ AI API 调用失败: {e}")
             # 返回带有原始内容的结果，让生成器可以继续工作
             return {
                 "status": "success",
